@@ -1,0 +1,58 @@
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* center the main block */
+body {
+  background: #2c2c2c; /* dark gray background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* the blue card */
+main {
+  background: #6ec8e6; /* light blue */
+  border: 4px solid green;
+  padding: 2rem;
+  max-width: 600px;
+  text-align: center;
+  border-radius: 6px;
+}
+
+/* typography */
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: normal;
+}
+
+h2 {
+  margin: 1rem 0;
+}
+
+p {
+  margin: 0.8rem 0;
+  line-height: 1.5;
+}
+
+/* image */
+img {
+  margin: 1.5rem 0;
+}
+
+/* links */
+a {
+  color: purple;
+  text-decoration: none;
+  margin: 0 0.3rem;
+}
+
+a:hover {
+  text-decoration: underline;
+}

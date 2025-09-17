@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<p>Je commence le javascript, tu entres un jour en anglais, si c'est lundi ou vendredi ca écrit un message, sinon ca en écrit un autre, c'est interactif </p>
+    <form id="dayForm">
+        <input type="text" id="dayInput" placeholder="Enter a day" required>
+        <button type="submit">Check</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const form = document.getElementById('dayForm');
+        const input = document.getElementById('dayInput');
+        const result = document.getElementById('result');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from refreshing the page
+            const day = input.value.trim().toLowerCase();
+
+            const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+            if (!weekdays.includes(day)) {
+                result.textContent = "It's not a day.";
+            } else if (day === 'monday' || day === 'friday') {
+                result.textContent = "It's a good day!";
+            } else {
+                result.textContent = "It's a normal day.";
+            }
+        });
+    </script>
+
+</body>
+</html>

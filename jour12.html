@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word-like Editor</title>
+  <style>
+    body {
+      background-color: #f5f5f5; /* light grey background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .editor-container {
+      background-color: white;
+      width: 80%;
+      max-width: 800px; /* limit so it doesn't stretch too much */
+      height: 80%;
+      padding: 20px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.2); /* soft shadow like a page */
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    textarea {
+      flex: 1; /* take all the vertical space */
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none; /* prevent resizing by user */
+      font-size: 16px;
+      line-height: 1.6;
+      font-family: 'Times New Roman', serif; /* feels more like Word */
+    }
+
+    button {
+      margin-top: 10px;
+      align-self: flex-end;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      background-color: #07245f;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0a3a9a;
+    }
+
+    #liste {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Numerical Tool for Teachers</h1>
+  <div class="editor-container">
+    <textarea id="texte" placeholder="Start typing here..."></textarea>
+    <button id="ajouter">Ajouter</button>
+    <div id="liste"></div>
+  </div>
+
+  <script>
+    // Select elements
+    const bouton = document.getElementById("ajouter");
+    const champTexte = document.getElementById("texte");
+    const liste = document.getElementById("liste");
+
+    // When user clicks on "Ajouter"
+    bouton.addEventListener("click", function() {
+      // Get the text from textarea
+      const contenu = champTexte.value;
+
+      // Create a new paragraph with the text
+      const p = document.createElement("p");
+      p.textContent = contenu;
+
+      // Add it to the list (below editor)
+      liste.appendChild(p);
+
+      // Clear textarea
+      champTexte.value = "";
+    });
+  </script>
+</body>
+</html>

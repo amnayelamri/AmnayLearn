@@ -1,0 +1,111 @@
+body {
+
+font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #ebf0f5;
+  color: #07245f;
+  line-height: 1.6;
+}
+
+h1{
+    font-size: 4rem ;
+    font-family: "Dancing Script";
+}
+
+
+
+/* --- NAVBAR --- */
+.navbar {
+  background: #e8f2f9;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  
+  margin: 0 !important;
+  position: sticky;
+padding: 0.8rem 2rem;
+ 
+  z-index: 1000;
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #07245f;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.navbar a:hover {
+  color: #3c3744;
+}
+
+
+header {
+  background-color: #07245f;
+  color: white;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+h1, h2, h3 {
+  margin-bottom: 10px;
+  
+}
+
+main {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+
+section {
+  margin-bottom: 30px;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+ul, ol {
+  margin: 10px 0 10px 20px;
+}
+
+.etat-container {
+  display: flex; /* activate flexbox */
+  align-items: flex-start; /* align items at the top */
+  gap: 20px; /* space between image and text */
+}
+
+
+.etat-container img {
+  width: 200px;        /* largeur fixe */
+  height: 200px;       /* hauteur fixe */
+  object-fit: cover; /* coupe l’image pour remplir sans déformation */
+  object-position: top;
+  border-radius: 10px; /* coins arrondis si tu veux */
+}
+
+
+.etat-container ul {
+  list-style: none; /* remove bullet points */
+  padding: 0;
+  margin: 0;
+  flex: 1; /* allow the text to take the remaining space */
+}
+.etat-container ul li {
+  margin-bottom: 15px; /* espace vertical entre les éléments */
+  line-height: 1.6;    /* aère le texte dans chaque élément */
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #07245f;
+  color: white;
+}
+
+

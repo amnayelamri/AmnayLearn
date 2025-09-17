@@ -1,0 +1,125 @@
+body {
+  margin: 0;
+  font-family: "Titillium Web", Arial, Helvetica, sans-serif;
+  background : #fafafa;
+  color: #333;
+  text-align: center;
+}
+
+
+
+
+
+/* Navigation bar */
+header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background: #222;
+  justify-content: center;
+}
+
+header nav li {
+  margin: 0;
+}
+
+header nav a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: white;
+}
+
+header nav a:hover {
+  background: #444;
+}
+
+
+
+
+/* Title */
+#title {
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* ==== Calculus Training Styles ==== */
+
+.calc-container ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 40px 0;
+  padding: 0;
+  flex-wrap: wrap; /* allows wrapping if screen too small */
+}
+
+/* Responsive (mobile) → column */
+@media (max-width: 600px) {
+  .calc-container ul {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .calc-container ul li {
+    width: 80px;   /* smaller so it fits nicely */
+    height: 80px;
+    font-size: 1.5rem;
+  }
+}
+
+
+.calc-container ul li {
+  list-style: none;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+#operation {
+     width: 30px;   /* smaller width */
+  height: 30px;  /* smaller height */
+  font-size: 1.5rem;
+
+}
+
+#equalto {
+     width: 70px;   /* smaller width */
+  height: 70px;  /* smaller height */
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#equalto:hover{
+    transform: scale(1.05);
+    border-color: #3498db;
+    color: #3498db;
+}
+
+
+
+.calc-container h2 {
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+.calc-container #placeresult {
+  display: inline-block;
+  margin-left: 10px;
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #27ae60;
+}
+
+

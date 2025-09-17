@@ -1,0 +1,141 @@
+/* ======== RESET ======== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ======== BODY ======== */
+body {
+  background: #f8f9fa;
+  color: #222;
+  line-height: 1.6;
+}
+
+/* ======== NAVIGATION ======== */
+header {
+  background: #111;
+  color: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+nav ul li {
+  display: inline-block;
+}
+
+nav form {
+  display: flex;
+  align-items: center;
+}
+
+nav input[type="text"] {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+nav button {
+  background: #ff3333;
+  border: none;
+  color: #fff;
+  padding: 0.45rem 0.8rem;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+nav button:hover {
+  background: #cc0000;
+}
+
+nav select {
+  padding: 0.3rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+nav img {
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+/* ======== TITRES ======== */
+h2 {
+  margin: 2rem 0 1rem;
+  text-align: center;
+  font-size: 2rem;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #ddd;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #444;
+}
+
+/* ======== SECTIONS ======== */
+section {
+  padding: 2rem 1rem;
+  margin: 2rem auto;
+  max-width: 1000px;
+
+  /* rectangle style */
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+section > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+section img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+
+section img:hover {
+  transform: scale(1.05);
+}
+
+/* ======== BOUTONS ======== */
+a button {
+  margin: 1rem;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background: #0077cc;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+a button:hover {
+  background: #005fa3;
+  transform: translateY(-2px);
+}
