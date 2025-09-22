@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Oncology Protocol Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>Oncology Protocol Assistant</h1>
+    <form id="protocolForm">
+      <label for="molecule">Molecule:</label>
+      <select id="molecule"></select>
+
+      <label for="parameter">Parameter:</label>
+      <select id="parameter"></select>
+
+      <label for="valueType">Value type:</label>
+      <select id="valueType"></select>
+
+      <label for="value">Measured value:</label>
+      <select  id="value"> </select>
+
+      <button type="submit">Check Protocol</button>
+    </form>
+
+    <div id="result" class="card hidden"></div>
+  </div>
+
+  <script src="rules.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
