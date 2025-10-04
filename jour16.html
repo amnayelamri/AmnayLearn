@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Un autre Jour </title>
+</head>
+<body>
+   <h1>Book Finder</h1>
+    <input type="text" id="book-title" placeholder="Enter a book title">
+    <button id="search-btn">Search</button>
+    <div id="book-result"></div>
+
+<script>
+document.getElementById('search-btn').addEventListener('click', () => {
+  const title = document.getElementById('book-title').value.trim();
+  if (!title) return alert('Please enter a book title');
+
+  // Clear previous result
+  const resultDiv = document.getElementById('book-result');
+  resultDiv.innerHTML = '';
+
+  // Fetch from Open Library Search API
+  fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`)
+    .then(response => response.json())
+    .then(data => {
+      if (!data.docs || data.docs.length === 0) {
+        resultDiv.textContent = 'No books found.';
+        return;
+      }
+
+      // Pick the first result
+      const book = data.docs[0];
+      const coverId = book.cover_i;
+      const coverUrl = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : '';
+      const bookUrl = book.key ? `https://openlibrary.org${book.key}` : '#';
+      
+      // Display
+      const img = document.createElement('img');
+      img.src = coverUrl;
+      const titleEl = document.createElement('div');
+      titleEl.textContent = book.title;
+      const authorEl = document.createElement('div');
+      authorEl.textContent = book.author_name ? book.author_name.join(', ') : 'Unknown Author';
+      const linkEl = document.createElement('a');
+      linkEl.href = bookUrl;
+      linkEl.target = '_blank';
+      linkEl.textContent = 'View on Open Library';
+
+      resultDiv.appendChild(img);
+      resultDiv.appendChild(titleEl);
+      resultDiv.appendChild(authorEl);
+      resultDiv.appendChild(linkEl);
+    })
+    .catch(err => {
+      console.error(err);
+      resultDiv.textContent = 'Error fetching book data.';
+    });
+});
+</script>
+  
+
+</body>
+</html>
+
+

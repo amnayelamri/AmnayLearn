@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Un autre Jour </title>
+</head>
+<body>
+    <h1>trying the local storage</h1>
+    
+    <button>Plus one</button>
+    
+    <script>
+        let x
+        assertion= (!x)
+        console.log(assertion)
+        if (!localStorage.getItem('compteur')) {
+            localStorage.setItem('compteur',0)
+        }
+        document.querySelector('button').addEventListener('click',addOne)
+        function addOne() {
+            butScore=Number(localStorage.getItem('compteur'))
+            butScore+=1
+            localStorage.setItem('compteur', butScore);
+             console.log(butScore);
+        }
+       
+
+    </script>
+    
+</body>
+
+</html>

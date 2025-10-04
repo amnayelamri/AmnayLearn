@@ -1,30 +1,17 @@
-/* Reset basics */
-body {
-  margin: 0;
-  font-family: "Titillium Web", Arial, Helvetica, sans-serif;
-  background: #fafafa;
-  color: #333;
-  text-align: center;
-}
-
-
-
-
-
-/* Navigation bar */
-header nav ul {
-  list-style: none;
+/* Basic reset */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  display: flex;
+}
+
+body {
+  font-family: Arial, sans-serif;
   background: #222;
-  justify-content: center;
+  color: #333;
 }
 
-header nav li {
-  margin: 0;
-}
-
+/* Header */
 header nav a {
   display: block;
   padding: 12px 20px;
@@ -40,19 +27,21 @@ header nav a:hover {
 #title {
   text-align: center;
   margin: 20px 0;
+  color: white;
 }
 
-/* Container for the two sections stacked */
+/* Main container */
 .container {
   display: flex;
-  flex-direction: column; /* stack vertically */
-  align-items: center; /* center horizontally */
+  flex-direction: column;
+  align-items: center;
   gap: 30px;
   margin: 20px auto;
   max-width: 800px;
+  padding: 0 20px;
 }
 
-/* Left column becomes a centered box */
+/* Left section */
 .left {
   background: #f0f0f0;
   padding: 20px;
@@ -63,7 +52,7 @@ header nav a:hover {
   text-align: left;
 }
 
-/* Legend style */
+/* Legend styles */
 .left .legend {
   display: flex;
   align-items: center;
@@ -85,24 +74,24 @@ header nav a:hover {
   background: black;
 }
 
-/* Right column as a circle */
+/* Right circular section */
 .right {
   background: white;
   width: 500px;
   height: 500px;
-  border-radius: 50%; /* makes it a circle */
+  border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15px; /* space for button below */
+  margin-bottom: 15px;
   position: relative;
 }
 
-/* Move the button outside the circle */
+/* Button under the circle */
 #bg-toggle {
   position: relative;
-  margin-top: 15px; /* put below circle */
+  margin-top: 15px;
   padding: 12px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -116,3 +105,65 @@ header nav a:hover {
 #bg-toggle:hover {
   background: #005fa3;
 }
+
+/* ----------- RESPONSIVE DESIGN ----------- */
+
+/* For tablets */
+@media (max-width: 900px) {
+  .right {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 600px) {
+  header nav a {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  #title {
+    font-size: 20px;
+    margin: 15px 0;
+  }
+
+  .container {
+    gap: 20px;
+  }
+
+  .left {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .redlegend, .blacklegend {
+    width: 16px;
+    height: 16px;
+  }
+
+  .right {
+    width: 300px;
+    height: 300px;
+  }
+
+  #bg-toggle {
+    width: 100%;
+    max-width: 250px;
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 400px) {
+  .right {
+    width: 240px;
+    height: 240px;
+  }
+
+  #bg-toggle {
+    font-size: 13px;
+  }
+}
+
