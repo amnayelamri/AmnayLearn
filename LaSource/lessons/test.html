@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درس تلقين القرآن</title>
+    
+    <!-- Arabic Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        #youtube-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .timeline {
+            position: relative;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .marker {
+            position: absolute;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: #dc3545;
+            cursor: pointer;
+        }
+
+        .marker-label {
+            position: absolute;
+            top: -30px;
+            right: 50%;
+            transform: translateX(50%);
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .time-display {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 30px;
+        }
+
+        .pause-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .pause-overlay.active {
+            display: flex;
+        }
+
+        .pause-message {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 450px;
+        }
+
+        .pause-message h2 {
+            color: #1e3c72;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .pause-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 20px 50px;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .alert {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-right: 4px solid #17a2b8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .markers-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .markers-info h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .markers-count {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2a5298;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="lesson-title">درس تلقين القرآن</h1>
+            <p id="lesson-description">الوصف</p>
+        </div>
+
+        <div class="content">
+            <div class="alert">
+                <strong>🎯 كيفية الاستخدام:</strong> شغّل الفيديو وسيتوقف تلقائياً عند العلامات المحددة. اضغط "كرر" للعودة إلى آخر علامة، أو "واصل" لمتابعة المشاهدة.
+            </div>
+
+            <div class="video-container">
+                <div id="youtube-player"></div>
+            </div>
+
+            <div class="time-display" id="time-display">00:00 / 00:00</div>
+
+            <div class="timeline" id="timeline" onclick="seekTo(event)">
+                <div class="timeline-progress" id="timeline-progress"></div>
+                <div id="markers-container"></div>
+            </div>
+
+            <div class="markers-info">
+                <h3>عدد علامات التوقف</h3>
+                <div class="markers-count" id="markers-count">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pause-overlay" id="pause-overlay">
+        <div class="pause-message">
+            <h2>⏸ وقت التكرار</h2>
+            <div class="pause-buttons">
+                <button class="btn btn-primary" onclick="repeatFromLastMarker()">🔄 كرر</button>
+                <button class="btn btn-success" onclick="resumeVideo()">▶️ واصل</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // ⭐ قم بتعديل هذا القسم فقط ⭐
+        // ========================================
+        
+        const LESSON_CONFIG = {
+            // 1️⃣ عنوان الدرس
+            title: "سورة الفاتحة",
+            
+            // 2️⃣ وصف الدرس
+            description: "السورة الأولى في القرآن الكريم",
+            
+            // 3️⃣ رابط فيديو اليوتيوب
+            youtubeUrl: "https://www.youtube.com/watch?v=d1aOnueCYnY",
+            
+            // 4️⃣ علامات التوقف (انسخها من ملف JSON المصدر)
+            markers:[
+                {
+                  "time": 11.554896001907348,
+                  "triggered": false
+                },
+                {
+                    "time": 19.712550057220458,
+                    "triggered": false
+                }
+            ]
+        };
+        
+        // ========================================
+        // ⛔ لا تعدل ما تحت هذا الخط
+        // ========================================
+
+        let player = null;
+        let markers = [];
+        let isPaused = false;
+        let currentMarkerIndex = -1;
+        let updateInterval = null;
+
+        // تحميل YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            initializeLesson();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.YT && window.YT.Player) {
+                initializeLesson();
+            }
+        });
+
+        function initializeLesson() {
+            // تعيين العنوان والوصف
+            document.getElementById('lesson-title').textContent = LESSON_CONFIG.title;
+            document.getElementById('lesson-description').textContent = LESSON_CONFIG.description;
+            
+            // تحميل العلامات
+            markers = LESSON_CONFIG.markers;
+            document.getElementById('markers-count').textContent = markers.length;
+            
+            // استخراج معرف الفيديو
+            const videoId = getVideoId(LESSON_CONFIG.youtubeUrl);
+            
+            if (!videoId) {
+                alert('رابط يوتيوب غير صحيح');
+                return;
+            }
+
+            // إنشاء المشغل
+            player = new YT.Player('youtube-player', {
+                videoId: videoId,
+                playerVars: {
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function getVideoId(url) {
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\?\/]+)/,
+                /^([a-zA-Z0-9_-]{11})$/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            return null;
+        }
+
+        function onPlayerReady(event) {
+            renderMarkers();
+            startUpdateInterval();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !isPaused) {
+                startUpdateInterval();
+            } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+                stopUpdateInterval();
+            }
+        }
+
+        function startUpdateInterval() {
+            stopUpdateInterval();
+            updateInterval = setInterval(() => {
+                updateTimeline();
+                checkForMarker();
+            }, 100);
+        }
+
+        function stopUpdateInterval() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        function updateTimeline() {
+            if (!player || !player.getCurrentTime) return;
+            
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            
+            if (duration > 0) {
+                const progress = (currentTime / duration) * 100;
+                document.getElementById('timeline-progress').style.width = progress + '%';
+                
+                const currentMinutes = Math.floor(currentTime / 60);
+                const currentSeconds = Math.floor(currentTime % 60);
+                const durationMinutes = Math.floor(duration / 60);
+                const durationSeconds = Math.floor(duration % 60);
+                
+                document.getElementById('time-display').textContent = 
+                    `${pad(currentMinutes)}:${pad(currentSeconds)} / ${pad(durationMinutes)}:${pad(durationSeconds)}`;
+            }
+        }
+
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        function checkForMarker() {
+            if (isPaused || !player) return;
+
+            const currentTime = player.getCurrentTime();
+            
+            for (let i = 0; i < markers.length; i++) {
+                const marker = markers[i];
+                if (currentTime >= marker.time && currentTime < marker.time + 0.2 && !marker.triggered) {
+                    marker.triggered = true;
+                    currentMarkerIndex = i;
+                    triggerPause();
+                    
+                    setTimeout(() => {
+                        marker.triggered = false;
+                    }, 2000);
+                    break;
+                }
+            }
+        }
+
+        function triggerPause() {
+            isPaused = true;
+            player.pauseVideo();
+            document.getElementById('pause-overlay').classList.add('active');
+        }
+
+        function repeatFromLastMarker() {
+            document.getElementById('pause-overlay').classList.remove('active');
+            isPaused = false;
+            
+            // Go to PREVIOUS marker (not current one)
+            const previousMarkerIndex = currentMarkerIndex - 1;
+            
+            if (previousMarkerIndex >= 0 && markers[previousMarkerIndex]) {
+                player.seekTo(markers[previousMarkerIndex].time+0.5, true);
+                player.playVideo();
+            } else {
+                // If no previous marker, go to start
+                player.seekTo(0, true);
+                player.playVideo();
+            }
+        }
+
+        function resumeVideo() {
+            document.getElementById('pause-overlay').classList.remove('active');
+            isPaused = false;
+            player.playVideo();
+        }
+
+        function renderMarkers() {
+            const container = document.getElementById('markers-container');
+            container.innerHTML = '';
+            
+            const duration = player ? player.getDuration() : 100;
+            
+            markers.forEach((marker) => {
+                const markerEl = document.createElement('div');
+                markerEl.className = 'marker';
+                markerEl.style.left = (marker.time / duration * 100) + '%';
+                markerEl.onclick = (e) => {
+                    e.stopPropagation();
+                    player.seekTo(marker.time, true);
+                };
+                
+                container.appendChild(markerEl);
+            });
+        }
+
+        function seekTo(event) {
+            if (!player) return;
+            
+            const timeline = document.getElementById('timeline');
+            const rect = timeline.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            const time = percentage * player.getDuration();
+            player.seekTo(time, true);
+        }
+    </script>
+</body>
+</html>

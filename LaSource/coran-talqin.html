@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تلقين القرآن - إنشاء علامات التوقف</title>
+    
+    <!-- Arabic Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(30, 60, 114, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .video-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .video-section.active {
+            display: block;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #youtube-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .timeline {
+            position: relative;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .marker {
+            position: absolute;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: #dc3545;
+            cursor: pointer;
+            transition: width 0.2s;
+        }
+
+        .marker:hover {
+            width: 10px;
+        }
+
+        .marker-label {
+            position: absolute;
+            top: -30px;
+            right: 50%;
+            transform: translateX(50%);
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .time-display {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .add-marker-section {
+            background: #e8f4f8;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .add-marker-section h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .markers-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .markers-list h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .marker-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .marker-time {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 18px;
+        }
+
+        .marker-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .pause-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .pause-overlay.active {
+            display: flex;
+        }
+
+        .pause-message {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .pause-message h2 {
+            color: #1e3c72;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .pause-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-right: 4px solid #17a2b8;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-right: 4px solid #28a745;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 10000;
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 2px solid #1e3c72;
+            border-radius: 8px;
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .my-lessons {
+            background: #fff3cd;
+            border-right: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .my-lessons h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .my-lessons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .my-lessons li {
+            margin-bottom: 10px;
+        }
+
+        .my-lessons a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 6px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .my-lessons a:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .edit-note {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+
+    <div class="container">
+        <div class="nav-bar">
+            <a href="index-arabic.html" class="nav-btn">🏠 العودة للرئيسية</a>
+            <div style="font-weight: 600; color: #1e3c72;">أداة إنشاء العلامات</div>
+        </div>
+
+        <div class="header">
+            <h1>🕌 تلقين القرآن</h1>
+            <p>أداة إنشاء علامات التوقف للحفظ والتلقين</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label>رابط فيديو اليوتيوب</label>
+                    <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <button class="btn btn-primary" onclick="loadVideo()">تحميل الفيديو</button>
+            </div>
+
+            <div class="my-lessons">
+                <h3>📚 دروسي المحفوظة</h3>
+                <ul>
+                    <li><a href="lesson-1.html">درس 1 - سورة الفاتحة</a></li>
+                    <li><a href="lesson-2.html">درس 2 - سورة الإخلاص</a></li>
+                    <li><a href="lesson-3.html">درس 3 - آية الكرسي</a></li>
+                    <!-- أضف المزيد من الروابط هنا -->
+                </ul>
+                <div class="edit-note">
+                    <strong>💡 ملاحظة:</strong> عدّل الروابط أعلاه يدوياً في الكود لإضافة دروسك الخاصة
+                </div>
+            </div>
+
+            <div class="video-section" id="video-section">
+                <div class="alert alert-info">
+                    <strong>طريقة الاستخدام:</strong> شاهد الفيديو واضغط "إضافة علامة توقف" في اللحظة المناسبة. سيتوقف الفيديو تلقائياً عند هذه النقاط.
+                </div>
+
+                <div class="video-container">
+                    <div id="youtube-player"></div>
+                </div>
+
+                <div class="time-display" id="time-display">00:00 / 00:00</div>
+
+                <div class="timeline" id="timeline" onclick="seekTo(event)">
+                    <div class="timeline-progress" id="timeline-progress"></div>
+                    <div id="markers-container"></div>
+                </div>
+
+                <div class="add-marker-section">
+                    <h3>إضافة علامة توقف في الوقت الحالي</h3>
+                    <button class="btn btn-primary" onclick="addMarker()">➕ إضافة علامة توقف</button>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-success" onclick="exportMarkers()">💾 تصدير العلامات</button>
+                    <button class="btn btn-secondary" onclick="importMarkers()">📁 استيراد العلامات</button>
+                    <button class="btn btn-danger" onclick="clearAllMarkers()">🗑 حذف جميع العلامات</button>
+                </div>
+
+                <div class="markers-list">
+                    <h3>علامات التوقف (إجمالي: <span id="markers-count">0</span>)</h3>
+                    <div id="markers-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pause-overlay" id="pause-overlay">
+        <div class="pause-message">
+            <h2>⏸ وقت التكرار</h2>
+            <div class="pause-buttons">
+                <button class="btn btn-primary" style="font-size: 18px; padding: 20px 40px;" onclick="repeatFromLastMarker()">🔄 كرر</button>
+                <button class="btn btn-success" style="font-size: 18px; padding: 20px 40px;" onclick="resumeVideo()">▶️ واصل</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let player = null;
+        let markers = [];
+        let currentVideoId = null;
+        let isPaused = false;
+        let currentMarkerIndex = -1;
+        let updateInterval = null;
+
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            console.log('YouTube API ready');
+        }
+
+        function getVideoId(url) {
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\?\/]+)/,
+                /^([a-zA-Z0-9_-]{11})$/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            return null;
+        }
+
+        function loadVideo() {
+            const url = document.getElementById('youtube-url').value.trim();
+            
+            if (!url) {
+                alert('الرجاء إدخال رابط فيديو يوتيوب');
+                return;
+            }
+
+            if (!window.YT || !window.YT.Player) {
+                alert('انتظر قليلاً... جاري تحميل مشغل اليوتيوب');
+                setTimeout(loadVideo, 1000);
+                return;
+            }
+
+            const videoId = getVideoId(url);
+            
+            if (!videoId) {
+                alert('رابط يوتيوب غير صحيح');
+                return;
+            }
+
+            currentVideoId = videoId;
+            document.getElementById('video-section').classList.add('active');
+
+            if (player) {
+                player.loadVideoById(videoId);
+            } else {
+                player = new YT.Player('youtube-player', {
+                    videoId: videoId,
+                    playerVars: {
+                        'playsinline': 1
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+
+            markers = [];
+            renderMarkers();
+        }
+
+        function onPlayerReady(event) {
+            startUpdateInterval();
+            showNotification('تم تحميل الفيديو بنجاح');
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !isPaused) {
+                startUpdateInterval();
+            } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+                stopUpdateInterval();
+            }
+        }
+
+        function startUpdateInterval() {
+            stopUpdateInterval();
+            updateInterval = setInterval(() => {
+                updateTimeline();
+                checkForMarker();
+            }, 100);
+        }
+
+        function stopUpdateInterval() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        function updateTimeline() {
+            if (!player || !player.getCurrentTime) return;
+            
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            
+            if (duration > 0) {
+                const progress = (currentTime / duration) * 100;
+                document.getElementById('timeline-progress').style.width = progress + '%';
+                
+                const currentMinutes = Math.floor(currentTime / 60);
+                const currentSeconds = Math.floor(currentTime % 60);
+                const durationMinutes = Math.floor(duration / 60);
+                const durationSeconds = Math.floor(duration % 60);
+                
+                document.getElementById('time-display').textContent = 
+                    `${pad(currentMinutes)}:${pad(currentSeconds)} / ${pad(durationMinutes)}:${pad(durationSeconds)}`;
+            }
+        }
+
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        function checkForMarker() {
+            if (isPaused || !player) return;
+
+            const currentTime = player.getCurrentTime();
+            
+            for (let i = 0; i < markers.length; i++) {
+                const marker = markers[i];
+                if (currentTime >= marker.time && currentTime < marker.time + 0.2 && !marker.triggered) {
+                    marker.triggered = true;
+                    currentMarkerIndex = i;
+                    triggerPause();
+                    
+                    setTimeout(() => {
+                        marker.triggered = false;
+                    }, 2000);
+                    break;
+                }
+            }
+        }
+
+        function triggerPause(duration) {
+            isPaused = true;
+            player.pauseVideo();
+            document.getElementById('pause-overlay').classList.add('active');
+        }
+
+        function repeatFromLastMarker() {
+            document.getElementById('pause-overlay').classList.remove('active');
+            isPaused = false;
+            
+            // Go to PREVIOUS marker (not current one)
+            const previousMarkerIndex = currentMarkerIndex - 1;
+            
+            if (previousMarkerIndex >= 0 && markers[previousMarkerIndex]) {
+                player.seekTo(markers[previousMarkerIndex].time+0.5, true);
+                player.playVideo();
+            } else {
+                // If no previous marker, go to start
+                player.seekTo(0, true);
+                player.playVideo();
+            }
+        }
+
+        function resumeVideo() {
+            document.getElementById('pause-overlay').classList.remove('active');
+            isPaused = false;
+            player.playVideo();
+        }
+
+        function addMarker() {
+            if (!player) {
+                alert('قم بتحميل فيديو أولاً');
+                return;
+            }
+
+            const currentTime = player.getCurrentTime();
+
+            markers.push({
+                time: currentTime,
+                triggered: false
+            });
+
+            markers.sort((a, b) => a.time - b.time);
+            renderMarkers();
+            showNotification('تمت إضافة علامة التوقف بنجاح');
+        }
+
+        function renderMarkers() {
+            const container = document.getElementById('markers-container');
+            const list = document.getElementById('markers-list');
+            const count = document.getElementById('markers-count');
+            
+            container.innerHTML = '';
+            list.innerHTML = '';
+            count.textContent = markers.length;
+            
+            if (markers.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #999;">لا توجد علامات توقف بعد</p>';
+                return;
+            }
+            
+            const duration = player ? player.getDuration() : 100;
+            
+            markers.forEach((marker, index) => {
+                // Timeline marker
+                const markerEl = document.createElement('div');
+                markerEl.className = 'marker';
+                markerEl.style.left = (marker.time / duration * 100) + '%';
+                markerEl.onclick = (e) => {
+                    e.stopPropagation();
+                    player.seekTo(marker.time, true);
+                };
+                
+                container.appendChild(markerEl);
+                
+                // List item
+                const itemEl = document.createElement('div');
+                itemEl.className = 'marker-item';
+                itemEl.innerHTML = `
+                    <div>
+                        <div class="marker-time">${formatTime(marker.time)}</div>
+                    </div>
+                    <div class="marker-actions">
+                        <button class="btn btn-danger btn-small" onclick="removeMarker(${index})">حذف</button>
+                    </div>
+                `;
+                list.appendChild(itemEl);
+            });
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${pad(mins)}:${pad(secs)}`;
+        }
+
+        function removeMarker(index) {
+            if (confirm('هل تريد حذف هذه العلامة؟')) {
+                markers.splice(index, 1);
+                renderMarkers();
+                showNotification('تم حذف العلامة');
+            }
+        }
+
+        function clearAllMarkers() {
+            if (confirm('هل تريد حذف جميع العلامات؟')) {
+                markers = [];
+                renderMarkers();
+                showNotification('تم حذف جميع العلامات');
+            }
+        }
+
+        function exportMarkers() {
+            if (markers.length === 0) {
+                alert('لا توجد علامات للتصدير');
+                return;
+            }
+
+            const data = {
+                videoId: currentVideoId,
+                youtubeUrl: `https://www.youtube.com/watch?v=${currentVideoId}`,
+                markers: markers,
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `coran-talqin-${currentVideoId}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('تم تصدير العلامات بنجاح');
+        }
+
+        function importMarkers() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        
+                        if (data.markers && Array.isArray(data.markers)) {
+                            if (confirm(`استيراد ${data.markers.length} علامة؟ سيتم استبدال العلامات الحالية.`)) {
+                                markers = data.markers;
+                                
+                                if (data.videoId && data.videoId !== currentVideoId) {
+                                    document.getElementById('youtube-url').value = data.youtubeUrl || `https://www.youtube.com/watch?v=${data.videoId}`;
+                                    loadVideo();
+                                }
+                                
+                                renderMarkers();
+                                showNotification('تم استيراد العلامات بنجاح');
+                            }
+                        } else {
+                            alert('ملف غير صحيح');
+                        }
+                    } catch (e) {
+                        alert('خطأ في قراءة الملف: ' + e.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function seekTo(event) {
+            if (!player) return;
+            
+            const timeline = document.getElementById('timeline');
+            const rect = timeline.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            const time = percentage * player.getDuration();
+            player.seekTo(time, true);
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
