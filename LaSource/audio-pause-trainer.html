@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Pause Trainer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff3838;
+        }
+
+        .player-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .player-section.active {
+            display: block;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #youtube-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .timeline {
+            position: relative;
+            height: 60px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .marker {
+            position: absolute;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: #ff4757;
+            cursor: pointer;
+            transition: width 0.2s;
+        }
+
+        .marker:hover {
+            width: 8px;
+        }
+
+        .marker-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4757;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .time-display {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .markers-list {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .markers-list h3 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .marker-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .marker-info {
+            flex: 1;
+        }
+
+        .marker-time {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .marker-duration {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .marker-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .pause-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .pause-overlay.active {
+            display: flex;
+        }
+
+        .pause-message {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .pause-message h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff4757;
+            margin: 20px 0;
+        }
+
+        .add-pause-form {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .add-pause-form h3 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎧 Audio Pause Trainer</h1>
+            <p>Perfect for Quran memorization and language learning</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label>YouTube URL</label>
+                    <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
+                    <button class="btn btn-primary" onclick="loadYouTube()" style="margin-top: 10px;">Load YouTube Video</button>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0; color: #999;">- OR -</div>
+
+                <div class="input-group">
+                    <label>Upload Audio File</label>
+                    <input type="file" id="audio-file" accept="audio/*" onchange="loadAudioFile()">
+                </div>
+            </div>
+
+            <div class="player-section" id="player-section">
+                <div class="alert alert-info">
+                    <strong>How to use:</strong> Play the audio/video, click "Add Pause Here" when you want to create a pause point. The media will automatically pause at these points during playback. <strong>Your markers are automatically saved</strong> and will be restored when you load the same media again!
+                </div>
+
+                <div id="youtube-container" class="video-container" style="display: none;">
+                    <div id="youtube-player"></div>
+                </div>
+
+                <audio id="audio-player" controls style="display: none;"></audio>
+
+                <div class="time-display" id="time-display">00:00 / 00:00</div>
+
+                <div class="timeline" id="timeline" onclick="seekTo(event)">
+                    <div class="timeline-progress" id="timeline-progress"></div>
+                    <div id="markers-container"></div>
+                </div>
+
+                <div class="add-pause-form">
+                    <h3>Add Pause at Current Time</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pause Duration (seconds)</label>
+                            <input type="number" id="pause-duration" value="3" min="1" max="60">
+                        </div>
+                        <button class="btn btn-primary" onclick="addPauseAtCurrentTime()">Add Pause Here</button>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-secondary" onclick="jumpToLastPause()">⏮ Jump to Last Pause</button>
+                    <button class="btn btn-secondary" onclick="jumpToPreviousPause()">⏪ Previous Pause</button>
+                    <button class="btn btn-secondary" onclick="jumpToNextPause()">⏩ Next Pause</button>
+                    <button class="btn btn-secondary" onclick="exportMarkers()">💾 Export Markers</button>
+                    <button class="btn btn-secondary" onclick="importMarkers()">📁 Import Markers</button>
+                    <button class="btn btn-danger" onclick="clearAllPauses()">🗑 Clear All Pauses</button>
+                </div>
+
+                <div class="markers-list">
+                    <h3>Pause Markers</h3>
+                    <div id="markers-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pause-overlay" id="pause-overlay">
+        <div class="pause-message">
+            <h2>⏸ Paused for Repetition</h2>
+            <div class="countdown" id="countdown">3</div>
+            <p>Resuming automatically...</p>
+            <button class="btn btn-primary" onclick="resumeEarly()">Resume Now</button>
+        </div>
+    </div>
+
+    <script>
+        let mediaType = null; // 'audio' or 'youtube'
+        let audioPlayer = null;
+        let youtubePlayer = null;
+        let pauseMarkers = [];
+        let currentDuration = 0;
+        let isInPause = false;
+        let pauseTimeout = null;
+        let currentPauseIndex = -1;
+        let updateInterval = null;
+        let currentMediaId = null; // YouTube video ID or audio filename
+        let isAddingMarker = false; // Prevent duplicate additions
+
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            console.log('YouTube API ready');
+        }
+
+        // ===== PERSISTENCE FUNCTIONS =====
+        
+        function saveMarkersToStorage() {
+            if (!currentMediaId) return;
+            
+            const storageKey = `pauseMarkers_${currentMediaId}`;
+            const data = {
+                mediaId: currentMediaId,
+                mediaType: mediaType,
+                markers: pauseMarkers,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            console.log('Markers saved to localStorage');
+        }
+        
+        function loadMarkersFromStorage(mediaId) {
+            const storageKey = `pauseMarkers_${mediaId}`;
+            const data = localStorage.getItem(storageKey);
+            
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    pauseMarkers = parsed.markers || [];
+                    console.log(`Loaded ${pauseMarkers.length} markers from storage`);
+                    renderMarkers();
+                    
+                    if (pauseMarkers.length > 0) {
+                        showNotification(`Loaded ${pauseMarkers.length} saved pause markers`);
+                    }
+                } catch (e) {
+                    console.error('Error loading markers:', e);
+                }
+            }
+        }
+        
+        function exportMarkers() {
+            if (pauseMarkers.length === 0) {
+                alert('No markers to export');
+                return;
+            }
+            
+            const data = {
+                mediaId: currentMediaId,
+                mediaType: mediaType,
+                markers: pauseMarkers,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pause-markers-${currentMediaId}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function importMarkers() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        
+                        if (confirm(`Import ${data.markers.length} markers? This will replace current markers.`)) {
+                            pauseMarkers = data.markers;
+                            renderMarkers();
+                            saveMarkersToStorage();
+                            showNotification(`Imported ${data.markers.length} markers`);
+                        }
+                    } catch (e) {
+                        alert('Error importing file: ' + e.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function getYouTubeVideoId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length == 11) ? match[7] : null;
+        }
+
+        function loadYouTube() {
+            const url = document.getElementById('youtube-url').value;
+            const videoId = getYouTubeVideoId(url);
+
+            if (!videoId) {
+                alert('Please enter a valid YouTube URL');
+                return;
+            }
+
+            currentMediaId = videoId;
+            mediaType = 'youtube';
+            document.getElementById('player-section').classList.add('active');
+            document.getElementById('youtube-container').style.display = 'block';
+            document.getElementById('audio-player').style.display = 'none';
+
+            if (youtubePlayer) {
+                youtubePlayer.loadVideoById(videoId);
+            } else {
+                youtubePlayer = new YT.Player('youtube-player', {
+                    videoId: videoId,
+                    playerVars: {
+                        'playsinline': 1
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+
+            // Load saved markers for this video
+            loadMarkersFromStorage(videoId);
+        }
+
+        function onPlayerReady(event) {
+            currentDuration = youtubePlayer.getDuration();
+            startUpdateInterval();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !isInPause) {
+                startUpdateInterval();
+            } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+                stopUpdateInterval();
+            }
+        }
+
+        function loadAudioFile() {
+            const file = document.getElementById('audio-file').files[0];
+            if (!file) return;
+
+            // Use filename + size as unique identifier
+            currentMediaId = `audio_${file.name}_${file.size}`;
+            mediaType = 'audio';
+            
+            // Get or create audio player
+            if (!audioPlayer) {
+                audioPlayer = document.getElementById('audio-player');
+            } else {
+                // Remove old event listeners to prevent duplicates
+                audioPlayer.removeEventListener('timeupdate', checkForPause);
+                audioPlayer.removeEventListener('play', startUpdateInterval);
+                audioPlayer.removeEventListener('pause', stopUpdateInterval);
+                audioPlayer.removeEventListener('loadedmetadata', handleLoadedMetadata);
+            }
+            
+            const url = URL.createObjectURL(file);
+            audioPlayer.src = url;
+            
+            document.getElementById('player-section').classList.add('active');
+            document.getElementById('youtube-container').style.display = 'none';
+            document.getElementById('audio-player').style.display = 'block';
+
+            // Add event listeners (only once now)
+            audioPlayer.addEventListener('loadedmetadata', handleLoadedMetadata);
+            audioPlayer.addEventListener('timeupdate', checkForPause);
+            audioPlayer.addEventListener('play', startUpdateInterval);
+            audioPlayer.addEventListener('pause', stopUpdateInterval);
+
+            // Load saved markers for this audio file
+            loadMarkersFromStorage(currentMediaId);
+        }
+        
+        function handleLoadedMetadata() {
+            currentDuration = audioPlayer.duration;
+        }
+
+        function getCurrentTime() {
+            if (mediaType === 'youtube' && youtubePlayer) {
+                return youtubePlayer.getCurrentTime();
+            } else if (mediaType === 'audio' && audioPlayer) {
+                return audioPlayer.currentTime;
+            }
+            return 0;
+        }
+
+        function getDuration() {
+            if (mediaType === 'youtube' && youtubePlayer) {
+                return youtubePlayer.getDuration();
+            } else if (mediaType === 'audio' && audioPlayer) {
+                return audioPlayer.duration;
+            }
+            return 0;
+        }
+
+        function pauseMedia() {
+            if (mediaType === 'youtube' && youtubePlayer) {
+                youtubePlayer.pauseVideo();
+            } else if (mediaType === 'audio' && audioPlayer) {
+                audioPlayer.pause();
+            }
+        }
+
+        function playMedia() {
+            if (mediaType === 'youtube' && youtubePlayer) {
+                youtubePlayer.playVideo();
+            } else if (mediaType === 'audio' && audioPlayer) {
+                audioPlayer.play();
+            }
+        }
+
+        function seekToTime(time) {
+            if (mediaType === 'youtube' && youtubePlayer) {
+                youtubePlayer.seekTo(time, true);
+            } else if (mediaType === 'audio' && audioPlayer) {
+                audioPlayer.currentTime = time;
+            }
+        }
+
+        function startUpdateInterval() {
+            stopUpdateInterval();
+            updateInterval = setInterval(() => {
+                updateTimeline();
+                checkForPause();
+            }, 100);
+        }
+
+        function stopUpdateInterval() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        function updateTimeline() {
+            const currentTime = getCurrentTime();
+            const duration = getDuration();
+            
+            if (duration > 0) {
+                const progress = (currentTime / duration) * 100;
+                document.getElementById('timeline-progress').style.width = progress + '%';
+                
+                const currentMinutes = Math.floor(currentTime / 60);
+                const currentSeconds = Math.floor(currentTime % 60);
+                const durationMinutes = Math.floor(duration / 60);
+                const durationSeconds = Math.floor(duration % 60);
+                
+                document.getElementById('time-display').textContent = 
+                    `${pad(currentMinutes)}:${pad(currentSeconds)} / ${pad(durationMinutes)}:${pad(durationSeconds)}`;
+            }
+        }
+
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        function checkForPause() {
+            if (isInPause) return;
+
+            const currentTime = getCurrentTime();
+            
+            for (let i = 0; i < pauseMarkers.length; i++) {
+                const marker = pauseMarkers[i];
+                if (currentTime >= marker.time && currentTime < marker.time + 0.1 && !marker.triggered) {
+                    marker.triggered = true;
+                    currentPauseIndex = i;
+                    triggerPause(marker.duration);
+                    
+                    // Reset triggered flag after passing the marker
+                    setTimeout(() => {
+                        marker.triggered = false;
+                    }, 2000);
+                    break;
+                }
+            }
+        }
+
+        function triggerPause(duration) {
+            isInPause = true;
+            pauseMedia();
+            
+            document.getElementById('pause-overlay').classList.add('active');
+            
+            let countdown = duration;
+            document.getElementById('countdown').textContent = countdown;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    document.getElementById('countdown').textContent = countdown;
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            pauseTimeout = setTimeout(() => {
+                resumeEarly();
+            }, duration * 1000);
+        }
+
+        function resumeEarly() {
+            if (pauseTimeout) {
+                clearTimeout(pauseTimeout);
+                pauseTimeout = null;
+            }
+            
+            document.getElementById('pause-overlay').classList.remove('active');
+            isInPause = false;
+            playMedia();
+        }
+
+        function addPauseAtCurrentTime() {
+            // Prevent duplicate calls
+            if (isAddingMarker) {
+                console.log('Already adding marker, ignoring duplicate call');
+                return;
+            }
+            isAddingMarker = true;
+            
+            const currentTime = getCurrentTime();
+            const duration = parseInt(document.getElementById('pause-duration').value);
+            
+            if (currentTime === 0 && getDuration() === 0) {
+                alert('Please load a media file first');
+                isAddingMarker = false;
+                return;
+            }
+            
+            pauseMarkers.push({
+                time: currentTime,
+                duration: duration,
+                triggered: false
+            });
+            
+            pauseMarkers.sort((a, b) => a.time - b.time);
+            renderMarkers();
+            saveMarkersToStorage();
+            showNotification('Pause marker added and saved!');
+            
+            // Reset flag after a short delay
+            setTimeout(() => {
+                isAddingMarker = false;
+            }, 300);
+        }
+
+        function renderMarkers() {
+            const container = document.getElementById('markers-container');
+            const list = document.getElementById('markers-list');
+            container.innerHTML = '';
+            list.innerHTML = '';
+            
+            if (pauseMarkers.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center;">No pause markers yet</p>';
+                return;
+            }
+            
+            const duration = getDuration();
+            
+            pauseMarkers.forEach((marker, index) => {
+                // Timeline marker
+                const markerEl = document.createElement('div');
+                markerEl.className = 'marker';
+                markerEl.style.left = (marker.time / duration * 100) + '%';
+                markerEl.onclick = (e) => {
+                    e.stopPropagation();
+                    seekToTime(marker.time);
+                };
+                
+                const label = document.createElement('div');
+                label.className = 'marker-label';
+                label.textContent = `${marker.duration}s`;
+                markerEl.appendChild(label);
+                
+                container.appendChild(markerEl);
+                
+                // List item
+                const itemEl = document.createElement('div');
+                itemEl.className = 'marker-item';
+                itemEl.innerHTML = `
+                    <div class="marker-info">
+                        <div class="marker-time">${formatTime(marker.time)}</div>
+                        <div class="marker-duration">Pause for ${marker.duration} seconds</div>
+                    </div>
+                    <div class="marker-actions">
+                        <button class="btn btn-secondary btn-small" onclick="seekToTime(${marker.time})">Go</button>
+                        <button class="btn btn-danger btn-small" onclick="removeMarker(${index})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(itemEl);
+            });
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${pad(mins)}:${pad(secs)}`;
+        }
+
+        function removeMarker(index) {
+            pauseMarkers.splice(index, 1);
+            renderMarkers();
+            saveMarkersToStorage();
+        }
+
+        function clearAllPauses() {
+            if (confirm('Are you sure you want to clear all pause markers?')) {
+                pauseMarkers = [];
+                renderMarkers();
+                saveMarkersToStorage();
+            }
+        }
+
+        function jumpToLastPause() {
+            if (pauseMarkers.length === 0) {
+                alert('No pause markers created yet');
+                return;
+            }
+            
+            const lastMarker = pauseMarkers[pauseMarkers.length - 1];
+            seekToTime(lastMarker.time);
+        }
+
+        function jumpToPreviousPause() {
+            if (pauseMarkers.length === 0) {
+                alert('No pause markers created yet');
+                return;
+            }
+            
+            const currentTime = getCurrentTime();
+            
+            for (let i = pauseMarkers.length - 1; i >= 0; i--) {
+                if (pauseMarkers[i].time < currentTime - 1) {
+                    seekToTime(pauseMarkers[i].time);
+                    return;
+                }
+            }
+            
+            // If no previous marker, go to the last one
+            seekToTime(pauseMarkers[pauseMarkers.length - 1].time);
+        }
+
+        function jumpToNextPause() {
+            if (pauseMarkers.length === 0) {
+                alert('No pause markers created yet');
+                return;
+            }
+            
+            const currentTime = getCurrentTime();
+            
+            for (let i = 0; i < pauseMarkers.length; i++) {
+                if (pauseMarkers[i].time > currentTime + 1) {
+                    seekToTime(pauseMarkers[i].time);
+                    return;
+                }
+            }
+            
+            alert('No more pause markers ahead');
+        }
+
+        function seekTo(event) {
+            const timeline = document.getElementById('timeline');
+            const rect = timeline.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            const time = percentage * getDuration();
+            seekToTime(time);
+        }
+    </script>
+</body>
+</html>
