@@ -18,7 +18,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
           <FiBook size={28} />
-          <span>EduSlides</span>
+          <span>Site du Professeur EL Amri</span>
         </Link>
 
         <div className="navbar-menu">
