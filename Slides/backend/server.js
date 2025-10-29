@@ -10,9 +10,17 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://amnay-learn.vercel.app', // my actual Vercel URL
+    'http://localhost:3000' //  for local development
+  ],
+  credentials: true
+}));;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
