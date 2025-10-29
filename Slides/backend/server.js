@@ -12,7 +12,7 @@ connectDB();
 // Middleware
 app.use(cors({
   origin: [
-    'https://amnay-learn.vercel.app', // my actual Vercel URL
+    'https://eduslides.vercel.app', // my actual Vercel URL
     'http://localhost:3000' //  for local development
   ],
   credentials: true
